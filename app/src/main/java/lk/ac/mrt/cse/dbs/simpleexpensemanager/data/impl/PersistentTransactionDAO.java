@@ -20,11 +20,11 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Transaction;
 /**
  * Created by User on 04-Dec-15.
  */
-public class PermenentTransactionDAO implements TransactionDAO {
+public class PersistentTransactionDAO implements TransactionDAO {
     SQLiteDatabase database=null;
     DatabaseController dbControler=null;
 
-    public PermenentTransactionDAO(Context context) {
+    public PersistentTransactionDAO(Context context) {
         if(dbControler==null)
             dbControler=new DatabaseController(context);
         database=dbControler.getWritableDatabase();

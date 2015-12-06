@@ -18,12 +18,12 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.ExpenseType;
 /**
  * Created by User on 04-Dec-15.
  */
-public class PermenentAcountDAO implements AccountDAO {
+public class PersistentAcountDAO implements AccountDAO {
 
     SQLiteDatabase database=null;
     DatabaseController dbControler=null;
 
-    public PermenentAcountDAO(Context context) {
+    public PersistentAcountDAO(Context context) {
         if(dbControler==null)
             dbControler=new DatabaseController(context);
         database=dbControler.getWritableDatabase();

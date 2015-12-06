@@ -5,6 +5,6 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.control.exception.ExpenseManagerEx
 /**
  * Created by User on 04-Dec-15.
  */
-public class PermenentExpenseManager extends ExpenseManager {
+public class PersistentExpenseManager extends ExpenseManager {
     public void setup () throws ExpenseManagerException {}
 }
