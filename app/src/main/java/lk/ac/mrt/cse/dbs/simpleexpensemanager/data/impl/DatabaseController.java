@@ -40,8 +40,17 @@ public class DatabaseController extends SQLiteOpenHelper {
                     +amount+" double not null check amount>=0"+
                     ");";
 
+    private static DatabaseController instance = null;
+
     public DatabaseController(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    public static DatabaseController getInstance(Context context)
+    {
+        if(instance == null)
+            instance = new DatabaseController(context);
+        return instance;
     }
 
     @Override

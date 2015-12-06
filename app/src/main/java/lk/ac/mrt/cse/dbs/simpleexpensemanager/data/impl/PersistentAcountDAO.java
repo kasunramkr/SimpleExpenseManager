@@ -20,8 +20,8 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.ExpenseType;
  */
 public class PersistentAcountDAO implements AccountDAO {
 
-    SQLiteDatabase database=null;
-    DatabaseController dbControler=null;
+    private SQLiteDatabase database=null;
+    private DatabaseController dbControler=null;
 
     public PersistentAcountDAO(Context context) {
         if(dbControler==null)
