@@ -42,7 +42,7 @@ public class PermenentTransactionDAO implements TransactionDAO {
 
     @Override
     public List<Transaction> getAllTransactionLogs() {
-        Cursor tempCurser = database.query(dbControler.acountTableName, new String[]{dbControler.account_number}, null, null, null, null, null);
+        Cursor tempCurser = database.query(dbControler.transactionTableName, new String[]{dbControler.account_number}, null, null, null, null, null);
 
         List<Transaction> TransactionList=new ArrayList<Transaction>();
         while(tempCurser.moveToNext()){
@@ -52,6 +52,8 @@ public class PermenentTransactionDAO implements TransactionDAO {
             double amount=tempCurser.getDouble(tempCurser.getColumnIndex(dbControler.amount));
             TransactionList.add(new Transaction(dateConverteMethod(date),transaction_account_number, ExpenseType.valueOf(expense_type), amount));
         }
+        tempCurser.close();
+        database.close();
         return TransactionList;
 
     }
@@ -70,6 +72,29 @@ public class PermenentTransactionDAO implements TransactionDAO {
 
     @Override
     public List<Transaction> getPaginatedTransactionLogs(int limit) {
-        return null;
+        String query = "Select * FROM " + dbControler.transactionTableName + " ORDER BY " + dbControler.date + " LIMIT " + limit ;
+        Cursor tempCurser = database.rawQuery(query, null);
+
+        //create list for Transaction objects
+        List<Transaction> transactionsList =  new LinkedList<>();
+
+        if (tempCurser.moveToFirst()) {
+            do{
+                Transaction transaction = null;
+                //do proper formatting for the date
+                String date=tempCurser.getString(tempCurser.getColumnIndex(dbControler.date));
+                String transaction_account_number=tempCurser.getString(tempCurser.getColumnIndex(dbControler.transaction_account_number));
+                String expense_type=tempCurser.getString(tempCurser.getColumnIndex(dbControler.expense_type));
+                double amount=tempCurser.getDouble(tempCurser.getColumnIndex(dbControler.amount));
+                transactionsList.add(new Transaction(dateConverteMethod(date),transaction_account_number, ExpenseType.valueOf(expense_type), amount));
+
+
+                transactionsList.add(transaction);
+            }while (tempCurser.moveToNext());
+        }
+        tempCurser.close();
+        database.close();
+        return transactionsList;
+
     }
 }
