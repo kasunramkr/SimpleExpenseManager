@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
@@ -48,11 +50,22 @@ public class PermenentTransactionDAO implements TransactionDAO {
             String date=tempCurser.getString(tempCurser.getColumnIndex(dbControler.date));
             String expense_type=tempCurser.getString(tempCurser.getColumnIndex(dbControler.expense_type));
             double amount=tempCurser.getDouble(tempCurser.getColumnIndex(dbControler.amount));
-           // TransactionList.add(new Transaction(date,transaction_account_number, expense_type, amount));
+            TransactionList.add(new Transaction(dateConverteMethod(date),transaction_account_number, ExpenseType.valueOf(expense_type), amount));
         }
-
         return TransactionList;
 
+    }
+
+    private Date dateConverteMethod(String dateString){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss aa");
+        Date convertedDate = new Date();
+        try {
+            convertedDate = dateFormat.parse(dateString);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return convertedDate;
     }
 
     @Override
