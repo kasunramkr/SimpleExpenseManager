@@ -58,9 +58,11 @@ public class PermenentAcountDAO implements AccountDAO {
     @Override
     public Account getAccount(String accountNo) throws InvalidAccountException {
         Cursor accountList = database.query(dbControler.acountTableName,new String[]{dbControler.account_number},"account_number=?",new String[]{accountNo}, null, null, null);
+
         String bankName=accountList.getString(accountList.getColumnIndex(dbControler.bank_name));
         String accHolderName=accountList.getString(accountList.getColumnIndex(dbControler.acount_owner));
         double balance=accountList.getDouble(accountList.getColumnIndex(dbControler.balance));
+
         return new Account(accountNo,bankName,accHolderName,balance);
     }
 

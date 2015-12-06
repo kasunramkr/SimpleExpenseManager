@@ -19,6 +19,7 @@ public class DatabaseController extends SQLiteOpenHelper {
     public static final String acount_owner="acount_owner";
     public static final String balance="balance";
 
+    public static final String transaction_account_number="transaction_account_number";
     public static final String date="date";
     public static final String expense_type="expense_type";
     public static final String amount="amount";
@@ -33,7 +34,7 @@ public class DatabaseController extends SQLiteOpenHelper {
 
     private static final String CreateTransactionTable=
             "create table if not exists "+transactionTableName+"(" +
-                    account_number+" String primary key,"
+                    transaction_account_number+" String primary key,"
                     +date+" String not null,"
                     +expense_type+" String not null check expense_type ='INCOME' or 'EXPENSE',"
                     +amount+" double not null check amount>=0"+

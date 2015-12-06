@@ -1,10 +1,17 @@
 package lk.ac.mrt.cse.dbs.simpleexpensemanager.data.impl;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.TransactionDAO;
+import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Account;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.ExpenseType;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Transaction;
 
@@ -12,30 +19,44 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Transaction;
  * Created by User on 04-Dec-15.
  */
 public class PermenentTransactionDAO implements TransactionDAO {
-    private final List<Transaction> transactions;
+    SQLiteDatabase database=null;
+    DatabaseController dbControler=null;
 
-    public PermenentTransactionDAO() {
-        transactions = new LinkedList<>();
+    public PermenentTransactionDAO(Context context) {
+        if(dbControler==null)
+            dbControler=new DatabaseController(context);
+        database=dbControler.getWritableDatabase();
     }
 
     @Override
     public void logTransaction(Date date, String accountNo, ExpenseType expenseType, double amount) {
-        Transaction transaction = new Transaction(date, accountNo, expenseType, amount);
-        transactions.add(transaction);
+        ContentValues values = new ContentValues();
+        values.put(dbControler.transaction_account_number, accountNo);
+        values.put(DatabaseController.date, date.toString());
+        values.put(dbControler.expense_type, expenseType.toString());
+        values.put(dbControler.amount, amount);
+        long insertId = database.insert(dbControler.transactionTableName, null,values);
     }
 
     @Override
     public List<Transaction> getAllTransactionLogs() {
-        return transactions;
+        Cursor tempCurser = database.query(dbControler.acountTableName, new String[]{dbControler.account_number}, null, null, null, null, null);
+
+        List<Transaction> TransactionList=new ArrayList<Transaction>();
+        while(tempCurser.moveToNext()){
+            String transaction_account_number=tempCurser.getString(tempCurser.getColumnIndex(dbControler.transaction_account_number));
+            String date=tempCurser.getString(tempCurser.getColumnIndex(dbControler.date));
+            String expense_type=tempCurser.getString(tempCurser.getColumnIndex(dbControler.expense_type));
+            double amount=tempCurser.getDouble(tempCurser.getColumnIndex(dbControler.amount));
+           // TransactionList.add(new Transaction(date,transaction_account_number, expense_type, amount));
+        }
+
+        return TransactionList;
+
     }
 
     @Override
     public List<Transaction> getPaginatedTransactionLogs(int limit) {
-        int size = transactions.size();
-        if (size <= limit) {
-            return transactions;
-        }
-        // return the last <code>limit</code> number of transaction logs
-        return transactions.subList(size - limit, size);
+        return null;
     }
 }
